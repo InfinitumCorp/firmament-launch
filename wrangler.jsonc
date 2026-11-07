@@ -1,0 +1,22 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // Firmament Network / FIRM Wallet launch site.
+  // Static pages in ./public; src/index.js only answers /api/* (CPO waitlist).
+  "name": "firmament-launch",
+  "main": "src/index.js",
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "not_found_handling": "404-page",
+    "run_worker_first": ["/api/*"]
+  },
+  "kv_namespaces": [{ "binding": "WAITLIST" }],
+  "routes": [
+    { "pattern": "firmnetwork.app", "custom_domain": true },
+    { "pattern": "www.firmnetwork.app", "custom_domain": true },
+    { "pattern": "firmwallet.app", "custom_domain": true },
+    { "pattern": "www.firmwallet.app", "custom_domain": true }
+  ],
+  "observability": { "enabled": true }
+}
