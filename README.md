@@ -1,6 +1,6 @@
 # Firmament launch site
 
-Coming-soon site for the Firmament Network™ CryptoPublicOffering™ (CPO), live at
+Coming-soon site for the $Firmament Network™ CryptoPublicOffering™ (CPO), live at
 firmnetwork.app and firmwallet.app (plus www). A Cloudflare Worker serves the
 static page in `public/` and a small waitlist API in `src/index.js`, backed by a
 KV store.
