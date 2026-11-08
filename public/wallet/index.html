@@ -34,7 +34,7 @@
   <div class="wrap">
     <span class="status"><span class="pulse"></span>Coming soon · Early access list open</span>
     <h1>Your keys.<br><span class="ghost">Every token.</span></h1>
-    <p class="lede"><b>$FIRM Wallet™ is a self-custody wallet for Solana, Ethereum and Base.</b> Hold $FIRM™ and every Infinitum product token in one place, swap between them in the app, and keep the keys on your own device.</p>
+    <p class="lede"><b>$FIRM Wallet™ is a self-custody wallet for Solana, Ethereum and Base.</b> Hold $FIRM™ and every Infinitum product token in one place, swap them for <b>any token</b> on those networks, and keep the keys on your own device.</p>
 
     <div class="hero-grid">
       <div class="device" aria-label="$FIRM Wallet™ preview" style="justify-self:start;max-width:none">
@@ -95,7 +95,7 @@
     <div class="feat">
       <div><p class="k">Custody</p><h4>Self-custody</h4><p>Your keys are created and kept on your device. Infinitum never holds them and can't move your funds.</p></div>
       <div><p class="k">Networks</p><h4>Solana, Ethereum, Base</h4><p>One address book, one portfolio and one history across all three networks.</p></div>
-      <div><p class="k">Exchange</p><h4>Built-in swap</h4><p>Swap any product token through $FIRM™ or USDC without leaving the app.</p></div>
+      <div><p class="k">Exchange</p><h4>Swap for any token</h4><p>Swap $FIRM™ or any Infinitum token for any token on Solana, Ethereum or Base, without leaving the app. Not just ours.</p></div>
       <div><p class="k">CPO™</p><h4>Ready for $FIRM™</h4><p>Receive your $FIRM™ from the CryptoPublicOffering™ on Solana, then carry it through the move to Ethereum.</p></div>
       <div><p class="k">Earnings</p><h4>REVshare lands here</h4><p>When token settlement goes live, eligible REVshare earnings can be paid straight into your wallet.</p></div>
       <div><p class="k">Rewards</p><h4>VEIL Rewards</h4><p>Browsing rewards from VEIL Browser flow through $Firmament Network™ into your wallet.</p></div>
@@ -108,14 +108,14 @@
   <div class="wrap wallet">
     <div>
       <p class="eyebrow">Built-in exchange</p>
-      <h2>Every token<br>routes through $FIRM™.</h2>
-      <p class="lede" style="margin-top:22px">Each product token pairs with $FIRM™ and USDC. Earn $HRVST from field observations and spend it on Cumulus://Cloud™ storage, or convert through $FIRM™ to USDC. The wallet picks the route; you approve the swap.</p>
+      <h2>Swap for<br>any token.</h2>
+      <p class="lede" style="margin-top:22px">Your crypto is never locked in. $FIRM™ and every Infinitum token can be swapped for <b>any token</b> on Solana, Ethereum or Base: SOL, ETH, USDC, or anything else trading there. Between Infinitum products, swaps route through $FIRM™, so you can earn $HRVST from field observations and spend it on Cumulus://Cloud™ storage. The wallet finds the route; you approve the swap.</p>
     </div>
     <div class="swap" aria-label="Swap preview">
       <div class="top"><span>Swap</span><span>Preview</span></div>
-      <div class="leg"><small>You pay</small><div><strong>250</strong><span>$HRVST</span></div></div>
-      <div class="leg"><small>You receive</small><div><strong>—</strong><span>$CMLS</span></div></div>
-      <div class="route">Route: <b>$HRVST</b> → <b>$FIRM™</b> → <b>$CMLS</b></div>
+      <div class="leg"><small>You pay</small><div><strong>1,000</strong><span>$FIRM™</span></div></div>
+      <div class="leg"><small>You receive</small><div><strong>—</strong><span>Any token</span></div></div>
+      <div class="route">Into: <b>SOL</b> · <b>ETH</b> · <b>USDC</b> · <b>$HRVST</b> · <b>$CMLS</b> · <b>any token on Solana, Ethereum or Base</b></div>
       <div class="cta">Available at launch</div>
     </div>
   </div>
@@ -128,7 +128,7 @@
         <p class="eyebrow">Supported at launch</p>
         <h2>Every Infinitum<br>token, one balance.</h2>
       </div>
-      <p>$FIRM Wallet™ is built to hold the whole token registry, plus the native assets and USDC on each network.</p>
+      <p>$FIRM Wallet™ holds the whole Infinitum token registry below, and it isn't limited to it: you can hold, send and swap any token on Solana, Ethereum and Base.</p>
     </div>
     <div class="table-wrap">
       <table style="min-width:560px">
@@ -201,7 +201,7 @@
 
 <script>
 (() => {
-  const tokens = ["$FIRM™","$VEIL","$HRVST","$FAB","$CMLS","$SCLV","$ARCT","$EIDT","$SPCTR","$MTRN","$NEXUS","SOLANA · ETHEREUM · BASE","YOUR KEYS"];
+  const tokens = ["$FIRM™","$VEIL","$HRVST","$FAB","$CMLS","$SCLV","$ARCT","$EIDT","$SPCTR","$MTRN","$NEXUS","SOLANA · ETHEREUM · BASE","SWAP FOR ANY TOKEN","YOUR KEYS"];
   const once = tokens.map(t => `<span>${t}<i>✦</i></span>`).join("");
   document.getElementById("track").innerHTML = once + once;
   document.getElementById("yr").textContent = new Date().getFullYear();
