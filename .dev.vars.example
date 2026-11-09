@@ -1,0 +1,6 @@
+# Copy to .dev.vars for `wrangler dev`. .dev.vars is gitignored.
+# reCAPTCHA stays off until BOTH values are non-empty.
+# Create a classic reCAPTCHA v2 ("I'm not a robot" Checkbox) key.
+# Do not use reCAPTCHA Enterprise. Never commit real values.
+RECAPTCHA_SITE_KEY=
+RECAPTCHA_SECRET_KEY=
