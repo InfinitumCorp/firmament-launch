@@ -203,5 +203,7 @@ footer{border-top:1px solid var(--ink);padding:40px 0 56px;font-size:12px;color:
 .bal-list .row em{font-style:normal;color:var(--ink-3)}
 .bal-list .net{font-size:12px;color:var(--ink-3);margin-left:8px}
 
-/* Sign in + Create a Cumulus ID sit on one line in the header. */
-.cid-slot .cid-wrap { flex-wrap: nowrap; gap: 8px; }
+/* Cumulus://ID account bar at the right end of the header; under 1100px the header row may wrap so it never overflows. */
+.cumulus-bar{display:inline-flex;align-items:center;flex-shrink:0;max-width:100%}
+.bar>nav{margin-inline:auto}
+@media (max-width:1100px){.bar{flex-wrap:wrap;height:auto;min-height:64px;padding-top:12px;padding-bottom:12px;gap:10px 16px}.bar .cumulus-bar{margin-left:auto}}
