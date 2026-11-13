@@ -2,8 +2,14 @@
 //   firmwallet.app (+www)   -> public/wallet/  ($FIRM Wallet™ early access)
 //   everything else         -> public/network/ ($Firmament Network™ CPO™)
 // /shared/* is served as-is to both. Each site has its own waitlist in KV.
-//   POST /api/waitlist        { email, wallet?, ref? } -> { ok, position, already }
+//   POST /api/waitlist        { email, wallet?, ref?, recaptchaToken? } -> { ok, position, already }
 //   GET  /api/waitlist/count  -> { count }
+//   GET  /api/waitlist/config -> { recaptchaSiteKey }  (null unless both keys are set)
+//
+// Classic reCAPTCHA (not Enterprise) runs only when RECAPTCHA_SITE_KEY and
+// RECAPTCHA_SECRET_KEY are both set. Otherwise signup behavior is unchanged.
+
+import { recaptchaKeys, verifyRecaptchaToken } from "./recaptcha.js";
 
 const EMAIL = /^[^\s@]{1,64}@[^\s@]{1,190}\.[^\s@]{2,24}$/;
 const SOL_ADDR = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/;
@@ -27,6 +33,11 @@ export default {
       return json({ count: await getCount() });
     }
 
+    if (url.pathname === "/api/waitlist/config" && request.method === "GET") {
+      const keys = recaptchaKeys(env);
+      return json({ recaptchaSiteKey: keys ? keys.site : null });
+    }
+
     if (url.pathname === "/api/waitlist" && request.method === "POST") {
       let body;
       try {
@@ -38,6 +49,31 @@ export default {
       const wallet = site === "network" ? String(body.wallet || "").trim() : "";
       if (!EMAIL.test(email)) return json({ ok: false, error: "Enter a valid email address." }, 400);
       if (wallet && !SOL_ADDR.test(wallet)) return json({ ok: false, error: "That isn't a valid Solana address." }, 400);
+
+      const keys = recaptchaKeys(env);
+      if (keys) {
+        const verdict = await verifyRecaptchaToken({
+          token: body.recaptchaToken,
+          secret: keys.secret,
+          remoteip: request.headers.get("CF-Connecting-IP") || "",
+          hostname: url.hostname,
+        });
+        if (!verdict.ok) {
+          console.warn(JSON.stringify({
+            event: "waitlist_recaptcha",
+            site,
+            reason: verdict.reason,
+            ...(verdict.hostname ? { seenHost: verdict.hostname } : {}),
+          }));
+          if (verdict.reason === "missing") {
+            return json({ ok: false, error: "Please confirm you're not a robot." }, 400);
+          }
+          if (verdict.reason === "unavailable") {
+            return json({ ok: false, error: "Verification is unavailable. Try again." }, 503);
+          }
+          return json({ ok: false, error: "Verification failed. Please try again." }, 400);
+        }
+      }
 
       const key = `${site}:email:${email}`;
       const existing = await env.WAITLIST.get(key, "json");

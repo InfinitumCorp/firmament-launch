@@ -14,6 +14,11 @@
     "run_worker_first": true
   },
   "kv_namespaces": [{ "binding": "WAITLIST" }],
+  // Optional classic reCAPTCHA (free v2 checkbox, not Enterprise) for POST /api/waitlist.
+  // Stays off until both are set. Put values in .dev.vars locally, or:
+  //   npx wrangler secret put RECAPTCHA_SITE_KEY
+  //   npx wrangler secret put RECAPTCHA_SECRET_KEY
+  // Never commit either value. See README "Spam protection".
   "routes": [
     { "pattern": "firmnetwork.app", "custom_domain": true },
     { "pattern": "www.firmnetwork.app", "custom_domain": true },

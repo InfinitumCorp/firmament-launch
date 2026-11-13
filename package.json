@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "wrangler dev",
+    "test": "node --test --test-concurrency=1",
     "check": "wrangler deploy --dry-run",
     "deploy": "wrangler deploy"
   },

@@ -31,8 +31,9 @@ npm run deploy   # deploy to Cloudflare (wrangler deploy)
 
 | Method and path | What it does |
 |---|---|
-| `POST /api/waitlist` | Body `{ email, wallet?, ref? }`. Returns `{ ok, position, already }`. Emails are deduplicated case-insensitively. `wallet` is accepted on firmnetwork.app only and must be a Solana address. |
+| `POST /api/waitlist` | Body `{ email, wallet?, ref?, recaptchaToken? }`. Returns `{ ok, position, already }`. Emails are deduplicated case-insensitively. `wallet` is accepted on firmnetwork.app only and must be a Solana address. `recaptchaToken` is required only when both reCAPTCHA keys below are set. |
 | `GET /api/waitlist/count` | Returns `{ count }` for the site you call it on. |
+| `GET /api/waitlist/config` | Returns `{ recaptchaSiteKey }` for the pages, or `{ recaptchaSiteKey: null }` when protection is off. Never returns the secret. |
 
 The hostname picks the list. Signups are stored in the `WAITLIST` KV namespace as
 `network:email:<address>` or `wallet:email:<address>`, with running totals in
@@ -41,3 +42,18 @@ The hostname picks the list. Signups are stored in the `WAITLIST` KV namespace a
 ```bash
 npx wrangler kv key list --binding WAITLIST --remote
 ```
+
+## Spam protection (optional)
+
+Signup stays exactly as it is today until **both** of these Worker bindings are non-empty. If either one is missing or blank, `recaptchaToken` is ignored and `siteverify` is not called.
+
+This is classic Google reCAPTCHA, the free non-Enterprise product: a v2 "I'm not a robot" checkbox on the form, checked on the server with `POST https://www.google.com/recaptcha/api/siteverify`. The browser loads `https://www.google.com/recaptcha/api.js`. It does not use reCAPTCHA Enterprise, `enterprise.js`, or `CreateAssessment`.
+
+Create a **v2 Checkbox** key in the reCAPTCHA admin console (not Enterprise, not a score-only v3 key). Allow every hostname that serves a form. For `wrangler dev`, that includes `127.0.0.1` and `localhost`.
+
+| Variable | How to set it | Notes |
+|---|---|---|
+| `RECAPTCHA_SITE_KEY` | `npx wrangler secret put RECAPTCHA_SITE_KEY` | Public site key. Pages read it from `GET /api/waitlist/config` and render the checkbox only then. Do not commit it. |
+| `RECAPTCHA_SECRET_KEY` | `npx wrangler secret put RECAPTCHA_SECRET_KEY` | Secret key. Sent only to Google's siteverify endpoint. Do not commit it. |
+
+For local preview, copy `.dev.vars.example` to `.dev.vars` (gitignored) and fill in both names. v3 tokens are also accepted if a client sends one: the score must be at least 0.5 and `action` must be `waitlist`. The shipped pages use the v2 checkbox. A hostname in Google's response must match the request host. Google's published test keys always report `testkey.google.com`, so this check rejects them; use your own key for a real signup. If siteverify fails open after the free monthly quota (`success: true` plus an "Over free quota." message), the signup is rejected.

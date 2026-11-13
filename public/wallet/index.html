@@ -62,6 +62,7 @@
               <label for="email">Email</label>
               <input id="email" name="email" type="email" autocomplete="email" placeholder="you@domain.com" required>
             </div>
+            <div id="recaptcha-widget" class="recaptcha"></div>
             <button class="btn solid" type="submit" id="submit">Get early access →</button>
             <p class="msg" id="msg" role="status" aria-live="polite"></p>
           </form>
@@ -223,6 +224,7 @@
   </div>
 </footer>
 
+<script src="/shared/recaptcha.js"></script>
 <script>
 (() => {
   const tokens = ["$FIRM™","$VEIL","$HRVST","$FAB","$CMLS","$SCLV","$ARCT","$EIDT","$SPCTR","$MTRN","$NEXUS","SOLANA-NATIVE","SWAP FOR ANY TOKEN","YOUR KEYS"];
@@ -264,12 +266,16 @@
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { msg.className = "msg err"; msg.textContent = "Enter a valid email address."; return; }
     btn.disabled = true; btn.textContent = "Joining…";
     try {
-      const r = await fetch("/api/waitlist", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ email, ref }) });
+      const recaptchaToken = window.firmamentRecaptchaToken ? await window.firmamentRecaptchaToken() : "";
+      const payload = { email, ref };
+      if (recaptchaToken) payload.recaptchaToken = recaptchaToken;
+      const r = await fetch("/api/waitlist", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(payload) });
       const d = await r.json();
       if (!d.ok) throw new Error(d.error || "Something went wrong. Try again.");
       if (!d.already) setCount(d.position);
       showDone(d.position, d.already);
     } catch (err) {
+      if (window.firmamentRecaptchaReset) window.firmamentRecaptchaReset();
       msg.className = "msg err"; msg.textContent = err.message || "Something went wrong. Try again.";
       btn.disabled = false; btn.textContent = "Get early access →";
     }
